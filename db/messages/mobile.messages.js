@@ -16,17 +16,5 @@ const MobileMessages = {
     USER_PASSWORD_NOT_SET: "Please set password For Login",
     USER_GET_SUCCESSFULLY: "User get successfully",
     USER_UPDATE_SUCCESSFULLY: "User update successfully",
-    // Course Messages
-    COURSE_ALREADY_EXIST: "This Course Alreaddy Exist",
-    COURSE_NOT_EXIST: "Invalid Course Id",
-    COURSE_ADD: "This course add successfully",
-    COURSE_GET: "course get Successfully",
-    COURSE_UPDATE: "course Update Sucessfully",
-    // Week Messages
-    WEEK_ALREADY_EXIST: "This Week Alreaddy exist",
-    WEEK_NOT_EXIST: "Invalid Week Id",
-    WEEK_ADD: "This Week add successfully",
-    WEEK_GET: "Week get Successfully",
-    WEEK_UPDATE: "Week Update Sucessfully",
 }
 module.exports = MobileMessages;
