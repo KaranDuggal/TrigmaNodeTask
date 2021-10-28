@@ -74,7 +74,7 @@ module.exports = AuthController = function () {
             // let HTML = `<h3>Email</h3> ${validate.value.email} <br><br><h3>OTP</h3> ${validate.value.otp} <br><br>`;
             // let subject = `forgetPassword`
             // await mailService.send({ email: isExist[0].email, html: HTML, subject: subject });
-            return res.status(200).json({ success: true, message: mobileMessages.AUTH_FORGET_PASSWORD, data: update });
+            return res.status(200).json({ success: true, message: mobileMessages.AUTH_FORGET_PASSWORD, data: update,otp :  validate.value.otp  });
         } catch (err) {
             console.log('err', err)
             return res.status(200).json({ success: false, message: err });
