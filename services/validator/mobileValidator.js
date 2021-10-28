@@ -22,34 +22,17 @@ class ValidatorService {
             email: Joi.string().email().required(),
             password: Joi.string().required(),
         }).required();
+        // Forget Password
+        this.schemas.forgotPassword = Joi.object({
+            email: Joi.string().email().required(),
+            otp: Joi.string().pattern(/^[0-9]+$/, { name: 'numbers' }).length(6).required(),
+        }).required();
         // Set Password
         this.schemas.MobSetPassword = Joi.object({
             otp: Joi.string().pattern(/^[0-9]+$/, { name: 'numbers' }).length(4).allow(null, ''),
             email: Joi.string().email().required(),
             password: Joi.string().required(),
             confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({ "any.only": `Confirm password not equal to password` }),
-        }).required();
-        // Forget Password
-        this.schemas.MobForgetPassword = Joi.object({
-            email: Joi.string().email().required(),
-            otp: Joi.string().pattern(/^[0-9]+$/, { name: 'numbers' }).length(4).required(),
-        }).required();
-        // Forget Password
-        this.schemas.MobVerifyOTP = Joi.object({
-            email: Joi.string().email().required(),
-            otp: Joi.string().pattern(/^[0-9]+$/, { name: 'numbers' }).length(4).required(),
-        }).required();
-        this.schemas.MobUserUpdate = Joi.object({
-            firstName: Joi.string().allow('', null),
-            lastName: Joi.string().allow('', null),
-            // email: Joi.string().email().allow('', null),
-            dob: Joi.date().utc().format("YYYY-MM-DD").less('now'),
-            gender: Joi.string().valid("mail","femail"),
-            linkedAccount: Joi.array().unique().items(Joi.string()),
-            cliftonStrenghts:Joi.array().unique().items(Joi.string()),
-            disc:Joi.array().unique().items(Joi.string()),
-            gift:Joi.array().unique().items(Joi.string()),
-            passions:Joi.string().allow('',null)
         }).required();
     }
 }

@@ -83,23 +83,23 @@ module.exports = AuthController = function () {
     //         return res.status(200).json({ success: false, message: err });
     //     }
     // }
-    // this.forgetPassword = async (req, res) => {
-    //     try {
-    //         req.body.otp = randomString.generate({ length: 4, charset: 'numeric' })
-    //         const validate = await validatorService.schemas.MobForgetPassword.validate(req.body);
-    //         if (validate.error) { throw validate.error.details[0].message };
-    //         const isExist = await dbService.find(UserModel, { email: validate.value.email, role: 'user' });
-    //         if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
-    //         const update = await dbService.update(UserModel, { email: validate.value.email, role: 'user' }, { otp: validate.value.otp });
-    //         let HTML = `<h3>Email</h3> ${validate.value.email} <br><br><h3>OTP</h3> ${validate.value.otp} <br><br>`;
-    //         let subject = `forgetPassword`
-    //         await mailService.send({ email: isExist[0].email, html: HTML, subject: subject });
-    //         return res.status(200).json({ success: true, message: mobileMessages.AUTH_FORGET_PASSWORD, data: update });
-    //     } catch (err) {
-    //         console.log('err', err)
-    //         return res.status(200).json({ success: false, message: err });
-    //     }
-    // }
+    this.forgotPassword = async (req, res) => {
+        try {
+            req.body.otp = `${Math.random().toFixed(6).substr(`-${6}`)}`;
+            const validate = await validatorService.schemas.forgotPassword.validate(req.body);
+            if (validate.error) { throw validate.error.details[0].message };
+            const isExist = await dbService.find(UserModel, { email: validate.value.email, role: 'user' });
+            if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
+            const update = await dbService.update(UserModel, { email: validate.value.email}, { otp: validate.value.otp });
+            // let HTML = `<h3>Email</h3> ${validate.value.email} <br><br><h3>OTP</h3> ${validate.value.otp} <br><br>`;
+            // let subject = `forgetPassword`
+            // await mailService.send({ email: isExist[0].email, html: HTML, subject: subject });
+            return res.status(200).json({ success: true, message: mobileMessages.AUTH_FORGET_PASSWORD, data: update });
+        } catch (err) {
+            console.log('err', err)
+            return res.status(200).json({ success: false, message: err });
+        }
+    }
     // this.verifyOTP = async (req, res) => {
     //     try {
     //         const validate = await validatorService.schemas.MobVerifyOTP.validate(req.body);

@@ -10,18 +10,12 @@ router.route('/register')
 
 router.route('/login')
     .post(authController.Login);
-
-// router.route('/verify')
-//     .post(authController.verify);
-
-// router.route('/setpassword')
-//     .post(authController.setPassword);
-
-// router.route('/forgetpassword')
-//     .post(authController.forgetPassword);
-
-// router.route('/verifyotp')
-//     .post(authController.verifyOTP);
+  
+router.route('/forgotpassword')
+    .post(authController.forgotPassword);
+    
+// router.route('/changepassword')
+//         .post(authController.setPassword);
 
 
 module.exports = router;
