@@ -1,7 +1,6 @@
 const constant = require('../db/constant')
 module.exports.configure = (mongoose) => {
-    // let url = `mongodb://${constant.DB_USER}:`+encodeURIComponent(constant.DB_PASSWORD)+`@${constant.DB_HOST}/${constant.DB_DATABASE_NAME}`;
-    let url = `mongodb://localhost/trigmaNodeTask`;
+    let url = `mongodb://localhost/${constant.DB_NAME}`;
     let connect = function () {
         mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true})
     }

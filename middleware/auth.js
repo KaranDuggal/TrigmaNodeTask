@@ -13,8 +13,7 @@ module.exports = (...args) => async (req, res, next) => {
         const decodedToken = jwt.verify(token, constant.JWT_SECRET);
         if (args[0] === 'isUser') {
             const User = await dbService.find(UserModel, { _id: decodedToken._id});
-            if(!User[0]) throw Error
-            if(User[0].role === "user" && User[0].isVerified == true && User[0].isPasswordSet == true ){
+            if(User[0]){
                 req.user = User[0];
                 return next();
             }else{
