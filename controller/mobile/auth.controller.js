@@ -14,51 +14,39 @@ const { UserModel } = require('../../models');
 const mobileMessages = require('../../db/messages/mobile.messages');
 
 module.exports = AuthController = function () {
-    this.Signup = async (req, res) => {
+    this.Register = async (req, res) => {
         try {
-            // let signup
-            // let isExist
-            // const validate = await validatorService.schemas.MobSignup.validate(req.body);
-            // if (validate.error) { throw validate.error.details[0].message };
-            // validate.value.token = await tokenService.create({ email: validate.value.email, role: validate.value.role }, { /* expiresIn: "1h"  */ })
-            // isExist = await dbService.find(UserModel, { email: validate.value.email, role: validate.value.role });
-            // if (isExist[0]) {
-            //     if (isExist[0].isVerified) {
-            //         throw mobileMessages.USER_ALREADY_EXIST
-            //     } else {
-            //         signup = await dbService.update(UserModel, { _id: isExist[0]._id }, validate.value);
-            //         signup = await dbService.find(UserModel, { _id: isExist[0]._id });signup = JSON.parse(JSON.stringify(signup[0]));
-            //     }
-            // } else {
-            //     signup = await dbService.create(UserModel, validate.value);
-            //     signup = JSON.parse(JSON.stringify(signup));
-            // }
-            // /*  // delete signup.__v; */
-            // let HTML = `<h3>Email</h3> ${signup.email} <br><br><h3>Token</h3> ${signup.token} <br><br>`
-            // let subject = `SignUp`
-            // await mailService.send({ email: signup.email, token: signup.token, html: HTML, subject: subject });
-            return res.status(200).json({ success: true, message: mobileMessages.AUTH_LOGIN, data: signup });
+            let register
+            let isExist
+            const validate = await validatorService.schemas.register.validate(req.body);
+            if (validate.error) { throw validate.error.details[0].message };
+            isExist = await dbService.find(UserModel, { email: validate.value.email});
+            if (isExist[0]) { throw mobileMessages.USER_ALREADY_EXIST }
+            validate.value.password = await bcryptjs.hash(validate.value.password, 10);
+            register = await dbService.create(UserModel, validate.value);
+            return res.status(200).json({ success: true, message: mobileMessages.AUTH_LOGIN, data: register });
         } catch (err) {
             console.log('err', err)
             return res.status(201).json({ success: false, message: err });
         }
     }
-    // this.Login = async (req, res) => {
-    //     try {
-    //         const validate = await validatorService.schemas.MobLogin.validate(req.body);
-    //         if (validate.error) { throw validate.error.details[0].message };
-    //         const isExist = await dbService.find(UserModel, { email: validate.value.email, role: 'user' });
-    //         if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
-    //         if (!isExist[0].isVerified) { throw mobileMessages.USER_NOT_VERIFY };
-    //         if (!isExist[0].isPasswordSet) { throw mobileMessages.USER_PASSWORD_NOT_SET };
-    //         const isPasswordRight = await bcryptjs.compare(validate.value.password, isExist[0].password);
-    //         if (!isPasswordRight) { throw mobileMessages.AUTH_PASSWORD_NOT_MATCH };
-    //         return res.status(200).json({ success: true, message: mobileMessages.AUTH_LOGIN, data: isExist[0], token: await tokenService.create({ _id: isExist[0]._id }, { /* expiresIn: "1h"  */ }) });
-    //     } catch (err) {
-    //         console.log('err', err)
-    //         return res.status(200).json({ success: false, message: err });
-    //     }
-    // }
+    this.Login = async (req, res) => {
+        try {
+            let user;
+            let isExist;
+            let isPasswordRight
+            const validate = await validatorService.schemas.Login.validate(req.body);
+            if (validate.error) { throw validate.error.details[0].message };
+            isExist = await dbService.find(UserModel, { email: validate.value.email });
+            if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
+            isPasswordRight = await bcryptjs.compare(validate.value.password, isExist[0].password);
+            if (!isPasswordRight) { throw mobileMessages.AUTH_PASSWORD_NOT_MATCH };
+            return res.status(200).json({ success: true, message: mobileMessages.AUTH_LOGIN, data: isExist[0], token: await tokenService.create({ _id: isExist[0]._id }, { /* expiresIn: "1h"  */ }) });
+        } catch (err) {
+            console.log('err', err)
+            return res.status(200).json({ success: false, message: err });
+        }
+    }
     // this.verify = async (req, res) => {
     //     try {
     //         const validate = await validatorService.schemas.MobVerify.validate(req.body);

@@ -7,20 +7,18 @@ class ValidatorService {
     }
     initializeScemas() {
         // AUTH
-        this.schemas.MobSignup = Joi.object({
-            firstName: Joi.string().required(),
-            lastName: Joi.string().required(),
+        this.schemas.register = Joi.object({
+            fullName: Joi.string().required(),
+            DOB: Joi.date().utc().format("YYYY-MM-DD").less('now'),
+            gender: Joi.string().valid('mail','femail').required(),
             email: Joi.string().email().required(),
-            confirmEmail: Joi.string().valid(Joi.ref('email')).required().messages({ "any.only": `Confirm email not equal to email` }),
-            role: Joi.string().valid('user','teacher').default('user')
-        }).required();
-        // Verify
-        this.schemas.MobVerify = Joi.object({
-            email: Joi.string().email().required(),
-            token: Joi.string().required(),
+            mobileNo: Joi.string().length(10).pattern(/^[0-9]+$/, { name: 'numbers' }).required(),
+            password: Joi.string().length(5).required(),
+            status: Joi.boolean().required(),
+            // confirmEmail: Joi.string().valid(Joi.ref('email')).required().messages({ "any.only": `Confirm email not equal to email` }),
         }).required();
         // Login
-        this.schemas.MobLogin = Joi.object({
+        this.schemas.Login = Joi.object({
             email: Joi.string().email().required(),
             password: Joi.string().required(),
         }).required();
