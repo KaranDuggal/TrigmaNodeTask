@@ -6,8 +6,7 @@ var logger = require('morgan');
 const mongoose = require('mongoose')
 require('./db/config').configure(mongoose);
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+const mobileIndexRouter = require('./routes/mobile/index');
 
 var app = express();
 
