@@ -32,7 +32,6 @@ module.exports = AuthController = function () {
     }
     this.Login = async (req, res) => {
         try {
-            let user;
             let isExist;
             let isPasswordRight
             const validate = await validatorService.schemas.Login.validate(req.body);
@@ -47,42 +46,23 @@ module.exports = AuthController = function () {
             return res.status(200).json({ success: false, message: err });
         }
     }
-    // this.verify = async (req, res) => {
-    //     try {
-    //         const validate = await validatorService.schemas.MobVerify.validate(req.body);
-    //         if (validate.error) { throw validate.error.details[0].message };
-    //         const tokenData = await tokenService.decodedToken(validate.value.token);
-    //         const isExist = await dbService.find(UserModel, { email: validate.value.email, role: 'user' });
-    //         if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
-    //         if (isExist[0].token != validate.value.token) { throw mobileMessages.AUTH_INVALID_TOKEN }
-    //         const update = await dbService.update(UserModel, { email: validate.value.email, role: 'user' }, { token: "", isVerified: true })
-    //         return res.status(200).json({ success: true, message: mobileMessages.AUTH_VERIFY, data: update });
-    //     } catch (err) {
-    //         console.log('err', err)
-    //         return res.status(200).json({ success: false, message: err });
-    //     }
-    // }
-    // this.setPassword = async (req, res) => {
-    //     try {
-    //         const validate = await validatorService.schemas.MobSetPassword.validate(req.body);
-    //         if (validate.error) { throw validate.error.details[0].message };
-    //         const isExist = await dbService.find(UserModel, { email: validate.value.email, role: 'user' });
-    //         if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
-    //         if (!isExist[0].isVerified) { throw mobileMessages.USER_NOT_VERIFY };
-    //         validate.value.password = await bcryptjs.hash(validate.value.password, 10);
-    //         let update
-    //         if (validate.value.otp) {
-    //             if (isExist[0].otp != validate.value.otp) { throw mobileMessages.AUTH_INVALID_OTP }
-    //             update = await dbService.update(UserModel, { email: validate.value.email, role: 'user' }, { password: validate.value.password, otp: '' });
-    //         } else {
-    //             update = await dbService.update(UserModel, { email: validate.value.email, role: 'user' }, { password: validate.value.password, isPasswordSet: true });
-    //         }
-    //         return res.status(200).json({ success: true, message: mobileMessages.AUTH_PASSWORD_SET, data: update });
-    //     } catch (err) {
-    //         console.log('err', err)
-    //         return res.status(200).json({ success: false, message: err });
-    //     }
-    // }
+    this.changePassword = async (req, res) => {
+        try {
+            let update
+            let isExist;
+            const validate = await validatorService.schemas.changePassword.validate(req.body);
+            if (validate.error) { throw validate.error.details[0].message };
+            isExist = await dbService.find(UserModel, { email: validate.value.email });
+            if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
+            if (isExist[0].otp !== validate.value.otp) { throw mobileMessages.AUTH_INVALID_OTP };
+            validate.value.password = await bcryptjs.hash(validate.value.password, 10);
+            update = await dbService.update(UserModel, { email: validate.value.email }, { password: validate.value.password, otp: "" });
+            return res.status(200).json({ success: true, message: mobileMessages.AUTH_PASSWORD_SET, data: update });
+        } catch (err) {
+            console.log('err', err)
+            return res.status(200).json({ success: false, message: err });
+        }
+    }
     this.forgotPassword = async (req, res) => {
         try {
             req.body.otp = `${Math.random().toFixed(6).substr(`-${6}`)}`;
@@ -100,18 +80,5 @@ module.exports = AuthController = function () {
             return res.status(200).json({ success: false, message: err });
         }
     }
-    // this.verifyOTP = async (req, res) => {
-    //     try {
-    //         const validate = await validatorService.schemas.MobVerifyOTP.validate(req.body);
-    //         if (validate.error) { throw validate.error.details[0].message };
-    //         const isExist = await dbService.find(UserModel, { email: validate.value.email, role: 'user' });
-    //         if (!isExist[0]) { throw mobileMessages.USER_NOT_EXIST };
-    //         if (isExist[0].otp != validate.value.otp) { throw mobileMessages.AUTH_INVALID_OTP }
-    //         return res.status(200).json({ success: true, message: mobileMessages.AUTH_VERIFY_OTP, data: 1 });
-    //     } catch (err) {
-    //         console.log('err', err)
-    //         return res.status(200).json({ success: false, message: err });
-    //     }
-    // }
 }
 

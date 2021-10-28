@@ -28,9 +28,9 @@ class ValidatorService {
             otp: Joi.string().pattern(/^[0-9]+$/, { name: 'numbers' }).length(6).required(),
         }).required();
         // Set Password
-        this.schemas.MobSetPassword = Joi.object({
-            otp: Joi.string().pattern(/^[0-9]+$/, { name: 'numbers' }).length(4).allow(null, ''),
+        this.schemas.changePassword = Joi.object({
             email: Joi.string().email().required(),
+            otp: Joi.string().pattern(/^[0-9]+$/, { name: 'numbers' }).length(6).required(),
             password: Joi.string().required(),
             confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({ "any.only": `Confirm password not equal to password` }),
         }).required();
